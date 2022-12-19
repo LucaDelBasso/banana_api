@@ -1,1 +1,5 @@
 venv/
+test.html
+libs/__pycache__
+tests/__pycache__
+tests/.pytest_cache
