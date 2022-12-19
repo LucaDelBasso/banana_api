@@ -13,7 +13,7 @@ def test_get_newest_bananas():
 
 def test_ods_to_array():
     ods_response = banana_scraper.get_newest_bananas()
-    cleaned_data = banana_scraper.test_ods_to_array(ods_response)
+    cleaned_data = banana_scraper.ods_to_array(ods_response)
     assert type(cleaned_data) is list
     try:
         assert type(cleaned_data.pop()) is dict
