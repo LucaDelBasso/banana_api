@@ -5,8 +5,8 @@ gov_url = 'https://www.gov.uk/government/statistical-data-sets/banana-prices'
 def get_all_bananas():
     response = requests.get(gov_url)
     csv_url = re.search(r'https:\/\/.+\/bananas-.+csv', response.text)[0]
-    csv_text = requests.get(csv_url).text
-    return csv_text
+    csv_response = requests.get(csv_url)
+    return csv_response
 
 def get_newest_bananas():
     response = requests.get(gov_url)
