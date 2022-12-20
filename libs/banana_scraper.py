@@ -2,8 +2,10 @@ import requests, re
 import json
 from pyexcel_ods3 import read_data
 from datetime import datetime
+from bs4 import BeautifulSoup
 
-gov_url = 'https://www.gov.uk/government/statistical-data-sets/banana-prices'
+base_url = 'https://www.gov.uk'
+gov_url = f'{base_url}/government/statistical-data-sets/banana-prices'
 
 def get_all_bananas():
     response = requests.get(gov_url)
@@ -13,7 +15,8 @@ def get_all_bananas():
 
 def get_newest_bananas():
     response = requests.get(gov_url)
-    ods_url = re.search(r'https:\/\/.+\/bananas-.+ods', response.text)[0]
+    soup = BeautifulSoup(response.text, 'html.parser')
+
     ods_response = requests.get(ods_url)
     print(ods_response.text)
     return ods_response
