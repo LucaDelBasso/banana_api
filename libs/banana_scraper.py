@@ -1,6 +1,7 @@
 import requests, re
 import json
 from pyexcel_ods3 import read_data
+from datetime import datetime
 
 gov_url = 'https://www.gov.uk/government/statistical-data-sets/banana-prices'
 
@@ -22,7 +23,22 @@ def ods_to_array(response):
     file.write(response.content)
     file.close()
     data = read_data('./current-bananas.ods')
-    print(data)
+    data = data['current_week']
+    updated_on = data[2][2].strftime('%Y-%m-%d')
+    ROW_START = 14
+    i = 0
+    array = []
+    while data[(ROW_START + i)][0] != '':
+        country_row = data[ROW_START + i]
+        row_created_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-ods_to_array(get_newest_bananas())
+        row = {
+            'origin': '',
+            'date': '',
+            'price': '',
+            'created_at': ''
+            }
+        array.append(row)
+        i+=1
+    return array
     
