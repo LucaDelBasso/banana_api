@@ -13,16 +13,20 @@ def get_soup(url):
     r.close()
     return soup
 
-def get_all_bananas():
+def get_url(span_class='preview'):
     soup = get_soup(GOV_URL)
-    span_download = soup.find('span', {'class': 'download'})
-    csv_url = span_download.find('a', {'class': 'govuk-link'})['href']
+    span = soup.find('span', {'class' : span_class})
+    url = span.find('a', {'class': 'govuk-link'})['href']
+    return url
+
+def get_all_bananas():
+    csv_url = get_url(span_class='download')
     csv_response = requests.get(csv_url)
     return csv_response
 
 def get_newest_bananas(last_date_in_db):
-    soup = get_soup(GOV_URL)
-    relative_url = soup.find('a', {'class': 'govuk-link', 'href': re.compile('/preview')})['href']
+
+    relative_url = get_url(span_class='preview')
     
     preview_url = f'{BASE_URL}{relative_url}'
     soup = get_soup(preview_url)

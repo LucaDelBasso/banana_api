@@ -1,6 +1,12 @@
 from libs import banana_scraper
 from datetime import datetime
 
+def test_get_data_url():
+    all = banana_scraper.get_url(span_class='preview')
+    assert all[0] == '/'
+    latest = banana_scraper.get_url(span_class='download')
+    assert latest[:5] == 'https'
+
 def test_get_all_bananas():
     response = banana_scraper.get_all_bananas()
     assert response.status_code == 200
