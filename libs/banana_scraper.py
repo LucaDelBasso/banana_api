@@ -32,17 +32,19 @@ def get_newest_bananas(last_date_in_db):
     for row in rows:
         cells = row.getText().split('\n')[1:-1]
         date_in_row = datetime.strptime(cells[1], '%Y-%m-%d')
-        if date_in_row > last_date_in_db:
-            cleaned_data_row = {
-                'country': cells[0],
-                'date': cells[1],
-                'price': cells[2],
-                'units': cells[3],
-                'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            }
-            array.append(cleaned_data_row)
-        else:
+        
+        if date_in_row <= last_date_in_db:
             break
+
+        cleaned_data_row = {
+            'country': cells[0],
+            'date': cells[1],
+            'price': cells[2],
+            'units': cells[3],
+            'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        }
+        array.append(cleaned_data_row)
+
     return array
 
 def ods_to_array(response):
