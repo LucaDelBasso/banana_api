@@ -1,0 +1,8 @@
+CREATE DATABASE IF NOT EXISTS banana_dev;
+USE dev;
+
+CREATE TABLE IF NOT EXISTS (
+
+    id int NOT NULL AUTO_INCREMENT,
+    
+);
