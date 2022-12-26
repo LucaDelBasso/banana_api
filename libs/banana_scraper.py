@@ -14,8 +14,9 @@ def get_soup(url):
     return soup
 
 def get_all_bananas():
-    response = requests.get(GOV_URL)
-    csv_url = re.search(r'https:\/\/.+\/bananas-.+csv', response.text)[0]
+    soup = get_soup(GOV_URL)
+    span_download = soup.find('span', {'class': 'download'})
+    csv_url = span_download.find('a', {'class': 'govuk-link'})['href']
     csv_response = requests.get(csv_url)
     return csv_response
 
@@ -47,4 +48,5 @@ def get_newest_bananas(last_date_in_db):
 
     return array
 
-get_newest_bananas(datetime(2022, 12, 9))
+# get_newest_bananas(datetime(2022, 12, 9))
+get_all_bananas()
