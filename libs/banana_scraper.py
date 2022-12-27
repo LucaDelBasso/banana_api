@@ -42,7 +42,7 @@ def get_newest_bananas(last_date_in_db):
             break
 
         cleaned_data_row = {
-            'country': cells[0],
+            'origin': cells[0],
             'date': cells[1],
             'price': cells[2],
             'units': cells[3],

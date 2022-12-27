@@ -13,8 +13,8 @@ def test_get_all_bananas():
     assert '£' in response.text
 
 def test_get_newest_bananas():
-    mongo_last_updated = datetime(2022, 12, 9) #yyyy/mm/dd
-    scraped_data = banana_scraper.get_newest_bananas(mongo_last_updated)
+    table_last_updated = datetime(2022, 12, 9) #yyyy/mm/dd
+    scraped_data = banana_scraper.get_newest_bananas(table_last_updated)
     
     assert type(scraped_data) is list
     try:

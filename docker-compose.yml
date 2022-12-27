@@ -6,20 +6,19 @@ services:
       - SYS_NICE
     restart: always
     environment:
-      - MYSQL_DATABASE='banana-api'
-      - MYSQL_ROOT_PASSWORD='$BananaApi'
+      MYSQL_DATABASE: banana-api
+      MYSQL_ROOT_PASSWORD: pass
     ports:
       - '3306:3306'
     volumes:
       - db:/var/lib/mysql
-      - ./db/init:/docker-entrypoint-initdb.d/
+      - ./db/init.sql:/docker-entrypoint-initdb.d/1.sql
     expose:
       - '3306'
   scraper:
     build: ./libs
     ports:
       - "3000:3000"
-    tty: true
 volumes:
   db:
     driver: local
