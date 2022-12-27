@@ -7,7 +7,7 @@ WORKDIR ${WORKDIR}
 
 ENV FLASK_APP=${WORKDIR}/banana/__init__.py
 
-COPY requirements.txt requirements.txt
+COPY ../requirements.txt requirements.txt
 
 RUN pip3 install -r requirements.txt
 

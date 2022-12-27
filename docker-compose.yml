@@ -15,6 +15,10 @@ services:
       - ./db/init.sql:/docker-entrypoint-initdb.d/1.sql
     expose:
       - '3306'
+  api:
+    build: ./banana
+    ports:
+      - "5000:5000"
   scraper:
     build: ./libs
     ports:
