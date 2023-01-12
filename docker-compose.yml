@@ -16,16 +16,27 @@ services:
       - ./db/init.sql:/docker-entrypoint-initdb.d/1.sql
     expose:
       - '3306'
+    networks:
+      - backend
   api:
     build: ./banana
     container_name: banana_api
     ports:
       - "5000:5000"
+    networks:
+      - scrape_net
+      - backend
   scraper:
     build: ./libs
     container_name: banana_scraper
     ports:
       - "3000:3000"
+    networks:
+      - scrape_net
 volumes:
   db:
     driver: local
+
+networks:
+  scrape_net:
+  backend:
