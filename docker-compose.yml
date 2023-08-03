@@ -6,6 +6,12 @@ services:
     container_name: banana_api
     ports:
       - "80:80"
+    environment:
+      DB_USERNAME: admin
+      DB_PASSWORD: password
+      DB: bananas-dev
+    volumes:
+      - .:/banana_api
     networks:
       - scrape_net
       - backend
@@ -13,8 +19,6 @@ services:
   scraper:
     build: ./libs
     container_name: banana_scraper
-    ports:
-      - "3000:3000"
     networks:
       - scrape_net
 
