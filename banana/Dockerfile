@@ -5,10 +5,10 @@ FROM python:3.10-slim-buster
 ENV WORKDIR=/banana_api
 WORKDIR ${WORKDIR}
 
-ENV FLASK_APP=${WORKDIR}/banana/__init__.py
-
-COPY ../requirements.txt requirements.txt
+COPY requirements.txt requirements.txt
 
 RUN pip3 install -r requirements.txt
 
-COPY . .
+COPY . ${WORKDIR}/banana
+
+CMD ["uvicorn", "banana.main:app", "--host", "0.0.0.0", "--port", "80"]
