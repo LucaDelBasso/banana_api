@@ -8,3 +8,4 @@ pyexcel-io==0.6.6
 pyexcel-ods3==0.6.1
 requests==2.28.1
 urllib3==1.26.13
+bs4

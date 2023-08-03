@@ -1,6 +1,5 @@
 import requests, re
 import json
-from pyexcel_ods3 import read_data
 from datetime import datetime
 from bs4 import BeautifulSoup
 
