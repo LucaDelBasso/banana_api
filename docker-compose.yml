@@ -5,7 +5,7 @@ services:
     build: ./banana
     container_name: banana_api
     ports:
-      - "5000:5000"
+      - "80:80"
     networks:
       - scrape_net
       - backend
@@ -25,10 +25,12 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: bananas-dev
     networks:
       - backend
     volumes: 
       - ./data:/data/db
+      - ./log:/var/log/mongodb
 
   mongo-express:
     depends_on:
