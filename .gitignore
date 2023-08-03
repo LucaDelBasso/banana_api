@@ -6,3 +6,5 @@ tests/.pytest_cache
 current-bananas.ods
 banana/__pycache__
 .pytest_cache
+data
+log
