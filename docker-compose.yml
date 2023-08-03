@@ -1,24 +1,57 @@
-version: '3.8'
+version: '3'
 services:
-  db:
-    image: mysql:8.0
-    cap_add:
-      - SYS_NICE
-    restart: always
-    environment:
-      MYSQL_DATABASE: banana-api
-      MYSQL_ROOT_PASSWORD: pass
+
+  api:
+    build: ./banana
+    container_name: banana_api
     ports:
-      - '3306:3306'
+      - "80:80"
+    environment:
+      DB_USERNAME: admin
+      DB_PASSWORD: password
+      DB: bananas-dev
     volumes:
-      - db:/var/lib/mysql
-      - ./db/init.sql:/docker-entrypoint-initdb.d/1.sql
-    expose:
-      - '3306'
+      - .:/banana_api
+    networks:
+      - scrape_net
+      - backend
+
   scraper:
     build: ./libs
+    container_name: banana_scraper
+    networks:
+      - scrape_net
+
+  mongo:
+    image: mongo
+    container_name: banana_db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: bananas-dev
+    networks:
+      - backend
+    volumes: 
+      - ./data:/data/db
+      - ./log:/var/log/mongodb
+
+  mongo-express:
+    depends_on:
+        - mongo
+    image: mongo-express
+    restart: unless-stopped
     ports:
-      - "3000:3000"
-volumes:
-  db:
-    driver: local
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_URL: mongodb://admin:password@mongo:27017/
+    networks:
+      - backend
+    volumes: 
+      - ./data:/data/db    
+
+networks:
+  scrape_net:
+  backend:
