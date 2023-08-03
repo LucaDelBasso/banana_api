@@ -5,3 +5,4 @@ tests/__pycache__
 tests/.pytest_cache
 current-bananas.ods
 data
+log
