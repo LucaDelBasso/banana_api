@@ -43,6 +43,12 @@ class Banana(BaseModel):
 def get_current_username(
     credentials: Annotated[HTTPBasicCredentials, Depends(security)]
 ):
+    '''
+    A HTTP Auth method that uses 'secrets' module, prevents certain attacks.
+    probably overkill given this project.
+
+    read more here: https://fastapi.tiangolo.com/advanced/security/http-basic-auth/#check-the-username
+    '''
     current_username_bytes = credentials.username.encode("utf8")
     correct_username_bytes = bytes(os.getenv("SCRAPER_POST_USERNAME", "no_user"), encoding="utf-8")
     is_correct_username = secrets.compare_digest(
