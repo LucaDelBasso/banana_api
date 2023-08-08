@@ -1,4 +1,9 @@
-version: '3'
+version: '3.4'
+
+x-api_credentials: &shared_env
+  SCRAPER_POST_USERNAME: scraper
+  SCRAPER_POST_PASSWORD: aSecurePassword
+
 services:
 
   api:
@@ -7,6 +12,7 @@ services:
     ports:
       - "80:80"
     environment:
+      <<: *shared_env
       DB_USERNAME: admin
       DB_PASSWORD: password
       DB: bananas-dev
@@ -19,6 +25,7 @@ services:
   scraper:
     build: ./libs
     container_name: banana_scraper
+    environment: *shared_env
     networks:
       - scrape_net
 
