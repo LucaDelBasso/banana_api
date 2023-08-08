@@ -2,6 +2,7 @@ venv/
 test.html
 banana/__pycache__
 libs/__pycache__
+libs/venv
 tests/__pycache__
 tests/.pytest_cache
 current-bananas.ods

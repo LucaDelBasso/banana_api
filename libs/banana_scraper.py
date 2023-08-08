@@ -12,20 +12,27 @@ def get_soup(url):
     r.close()
     return soup
 
-def get_url(span_class='preview'):
+#'https://www.gov.uk/government/statistical-data-sets/banana-prices'
+
+def get_url(all_data=False):
     soup = get_soup(GOV_URL)
-    span = soup.find('span', {'class' : span_class})
-    url = span.find('a', {'class': 'govuk-link'})['href']
+
+    if all_data:
+        section = soup.find_all('h2', {'class' : 'gem-c-attachment__title'})[2]
+    else:
+        section = soup.find_all('p', {'class': 'gem-c-attachment__metadata'})[5]
+    
+    url = section.find('a', {'class': 'govuk-link'})['href']
     return url
 
 def get_all_bananas():
-    csv_url = get_url(span_class='download')
+    csv_url = get_url(all_data=True)
     csv_response = requests.get(csv_url)
     return csv_response
 
 def get_newest_bananas(last_date_in_db):
 
-    relative_url = get_url(span_class='preview')
+    relative_url = get_url(all_data=False)
     
     preview_url = f'{BASE_URL}{relative_url}'
     soup = get_soup(preview_url)
