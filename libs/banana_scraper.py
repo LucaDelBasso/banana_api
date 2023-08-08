@@ -1,10 +1,16 @@
-import requests, re
+import requests, re, os
+from requests.adapters import HTTPAdapter, Retry
+import csv
 import json
 from datetime import datetime
 from bs4 import BeautifulSoup
 
 BASE_URL = 'https://www.gov.uk'
 GOV_URL = f'{BASE_URL}/government/statistical-data-sets/banana-prices'
+
+USER = os.getenv("SCRAPER_POST_USERNAME", "")
+PASS = os.getenv("SCRAPER_POST_PASSWORD", "")
+
 
 def get_soup(url):
     r = requests.get(url)
@@ -51,12 +57,34 @@ def get_newest_bananas(last_date_in_db):
             'origin': cells[0],
             'date': cells[1],
             'price': cells[2],
-            'units': cells[3],
-            'created_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            'units': cells[3]
         }
         array.append(cleaned_data_row)
 
     return array
 
-# get_newest_bananas(datetime(2022, 12, 9))
-get_all_bananas()
+headers = {
+    'accept': 'application/json',
+    'Content-Type': 'application/json',
+}
+
+response = get_all_bananas()
+reader = csv.reader(response.text.split('\n'), delimiter=',')
+next(reader, None) #ignore header
+
+
+for row in reader:
+    if row:
+        json_data = {
+            'origin': row[0],
+            'publication_date': str(datetime.strptime(row[1], '%Y-%m-%d')),
+            'price': float(row[2]),
+            'units': row[3]
+            }
+        
+        url = 'http://banana-api/bananas/'
+
+        response = requests.post(url, headers=headers,
+                                 json=json_data, auth=(USER, PASS))
+        
+        print(response.status_code)
