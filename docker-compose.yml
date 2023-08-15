@@ -17,17 +17,17 @@ services:
       DB_PASSWORD: password
       DB: bananas-dev
     volumes:
-      - .:/banana_api
+      - ./banana/app:/banana_api/app
     networks:
       - scrape_net
       - backend
 
-  scraper:
-    build: ./libs
-    container_name: banana_scraper
-    environment: *shared_env
-    networks:
-      - scrape_net
+  # scraper:
+  #   build: ./libs
+  #   container_name: banana_scraper
+  #   environment: *shared_env
+  #   networks:
+  #     - scrape_net
 
   mongo:
     image: mongo

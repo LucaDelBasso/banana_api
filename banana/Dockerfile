@@ -11,6 +11,8 @@ COPY requirements.txt requirements.txt
 
 RUN pip3 install -r requirements.txt
 
-COPY . ${WORKDIR}/banana
 
-CMD ["uvicorn", "banana.main:app", "--host", "0.0.0.0", "--port", "80"]
+COPY ./app ${WORKDIR}/app
+
+
+CMD ["uvicorn", "--reload", "--host", "0.0.0.0", "--port", "80", "app.main:app"]

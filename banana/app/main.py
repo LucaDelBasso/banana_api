@@ -17,7 +17,7 @@ security = HTTPBasic()
 MONGO_URI = f'mongodb://{os.getenv("DB_USERNAME")}:{os.getenv("DB_PASSWORD")}@banana_db:27017'
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_URI)
 db = client[os.getenv('DB')]
-
+bananas = db["bananas"]
 class Banana(BaseModel):
     origin: str = Field(...)
     publication_date: datetime = Field(...)
@@ -76,12 +76,39 @@ def read_root():
 
 @app.post("/bananas/")
 async def create_banana(banana: Banana, user: Annotated[str, Depends(get_current_username)]):
+    '''
+        Takes JSON data for a banana and writes it to the mongoDB Collection if it is the correct user.
+    '''
     banana_dict = banana.model_dump()
     banana_dict.update({"created_at": datetime.now()})
-    new_banana = await db["bananas"].insert_one(banana_dict)
+    new_banana = await bananas.insert_one(banana_dict)
 
     #exclude new ID from response
-    created_banana = await db["bananas"].find_one({"_id": new_banana.inserted_id}, {'_id': 0})
+    created_banana = await bananas.find_one({"_id": new_banana.inserted_id}, {'_id': 0})
 
     return JSONResponse(content=jsonable_encoder(created_banana), status_code=status.HTTP_201_CREATED)
+
+
+@app.get("/bananas/")
+async def get_bananas(
+    origin: str | None = None, skip: int = 0, limit: int = 1000, sort_by: str = 'publication_date', sort_asc: int = 1
+):
+    '''
+        Returns Bananas which can optionally be filtered on by origin.
+    '''
+
+    origin_search = {}
+    if origin:
+        origin_search = {'origin': origin}
+
+    cursor = bananas.find(origin_search,{'_id': 0}).sort(sort_by,sort_asc).skip(skip).limit(limit)
+
+    total_count = await bananas.count_documents(origin_search)
+    set_count = await bananas.count_documents(origin_search,skip=skip,limit=limit)
+
+    retrieved_bananas = await cursor.to_list(length=limit)
+    
+    headers = {"total-banana-count": str(total_count), 'returned-banana-count': str(set_count)}
+
+    return JSONResponse(content=jsonable_encoder(retrieved_bananas),headers=headers, status_code=status.HTTP_200_OK)
 
